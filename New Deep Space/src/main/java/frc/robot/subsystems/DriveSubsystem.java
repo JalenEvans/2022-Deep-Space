@@ -29,7 +29,6 @@ public class DriveSubsystem extends SubsystemBase {
     leftFollower1 = new WPI_TalonSRX(2);
     leftFollower2 = new WPI_TalonSRX(3);
     
-
     rightLeader = new WPI_TalonSRX(4);
     rightFollower1 = new WPI_TalonSRX(5);
     rightFollower2 = new WPI_TalonSRX(6);
@@ -41,6 +40,22 @@ public class DriveSubsystem extends SubsystemBase {
     rightFollower2.follow(rightLeader);
 
     tankDrive = new DifferentialDrive(leftLeader, rightLeader);
+
+    rightLeader.configPeakCurrentLimit(35);
+    rightFollower1.configPeakCurrentLimit(35);
+    rightFollower2.configPeakCurrentLimit(35);
+
+    rightLeader.configPeakCurrentDuration(2000);
+    rightFollower1.configPeakCurrentDuration(2000);
+    rightFollower2.configPeakCurrentDuration(2000);
+
+    leftLeader.configPeakCurrentLimit(35);
+    leftFollower1.configPeakCurrentLimit(35);
+    leftFollower2.configPeakCurrentLimit(35);
+
+    leftLeader.configPeakCurrentDuration(2000);
+    leftFollower1.configPeakCurrentDuration(2000);
+    leftFollower2.configPeakCurrentDuration(2000);
   }
 
   @Override
