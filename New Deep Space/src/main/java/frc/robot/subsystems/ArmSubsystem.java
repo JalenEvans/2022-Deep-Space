@@ -18,6 +18,8 @@ public class ArmSubsystem extends SubsystemBase {
   private static double minWristAngle = 90;
   private static double wobble = 10;
 
+  private double holdPosition;
+
   DigitalInput limitSwitch1;
   DigitalInput limitSwitch2;
   DigitalInput limitSwitchStop; 
@@ -43,7 +45,7 @@ public class ArmSubsystem extends SubsystemBase {
       liftLeader.set(speed * -1.0);
     } else {
       if (limitSwitch1.get()){
-        liftLeader.set( speed * -1.0);
+        liftLeader.set(speed * -1.0);
         holdPosition = getLiftEncoders();
       } else {
         liftStop();
@@ -63,6 +65,10 @@ public class ArmSubsystem extends SubsystemBase {
         liftStop();
       }
     }
+  }
+
+  private double getLiftEncoders() {
+    return liftLeader.getSensorCollection().getQuadraturePosition();
   }
 
   public void liftStop() {
