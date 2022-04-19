@@ -7,10 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ArmLift;
 import frc.robot.commands.DriveWithJoystick;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Outtake;
 import frc.robot.commands.Intake;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeOuttake;
@@ -31,13 +34,17 @@ public class RobotContainer {
 
   private JoystickButton intakeBtn;
   private JoystickButton outtakeBtn;
+  private JoystickButton slowModeButton;
 
   private DriveSubsystem drivetrain;
   private IntakeOuttake intakeOuttake;
+  private ArmSubsystem arm;
 
   private DriveWithJoystick driveWithJoystick;
   private Intake intake;
   private Outtake outtake;
+  private ArmLift armLift;
+  private InstantCommand toggleSlowMode;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,15 +53,22 @@ public class RobotContainer {
 
     intakeBtn = new JoystickButton(logitech, PS4Controller.Button.kL1.value);
     outtakeBtn = new JoystickButton(logitech, PS4Controller.Button.kR1.value);
+    slowModeButton = new JoystickButton(xbox, 4);
 
     drivetrain = new DriveSubsystem();
     intakeOuttake = new IntakeOuttake();
+    arm = new ArmSubsystem();
 
     driveWithJoystick = new DriveWithJoystick(drivetrain, xbox);
     intake = new Intake(intakeOuttake);
     outtake = new Outtake(intakeOuttake);
+    armLift = new ArmLift(arm, logitech);
+    toggleSlowMode = new InstantCommand(drivetrain::toggleSlowMode, drivetrain);
 
     drivetrain.setDefaultCommand(driveWithJoystick);
+    //arm.setDefaultCommand(armLift);
+
+    SmartDashboard.putData(arm);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -70,6 +84,7 @@ public class RobotContainer {
     // Operator controls
     intakeBtn.whileHeld(intake);
     outtakeBtn.whileHeld(outtake);
+    slowModeButton.whenPressed(toggleSlowMode);
   }
 
   /**

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -21,6 +22,8 @@ public class DriveSubsystem extends SubsystemBase {
   private WPI_TalonSRX rightLeader;
   private WPI_TalonSRX rightFollower1;
   private WPI_TalonSRX rightFollower2;
+
+  private boolean isSlowMode = false;
 
   private DifferentialDrive tankDrive;
 
@@ -64,10 +67,32 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double leftSpeed, double rightSpeed) {
-    tankDrive.tankDrive(leftSpeed, rightSpeed);
+    if(isSlowMode)
+    {
+    tankDrive.tankDrive(leftSpeed * .4, rightSpeed * .4);
+    }
+    else
+    {
+    tankDrive.tankDrive(leftSpeed * 0.8, rightSpeed * 0.8);
+    }
   }
 
   public void stopDrive() {
     tankDrive.tankDrive(0, 0);
+  }
+
+  public void toggleSlowMode()
+  {
+    isSlowMode = !(isSlowMode);
+  }
+
+  public boolean getSlowMode() {
+    return isSlowMode;
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Drivetrain");
+    builder.addBooleanProperty  ("Slow Mode", this::getSlowMode, null);
   }
 }
